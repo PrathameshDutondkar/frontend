@@ -4,21 +4,27 @@ import axios from 'axios';
 
 const Home = () => {
   const [data, setData] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [deletingUserId, setDeletingUserId] = useState(null);
 
   useEffect(() => {
-    // Make a GET request to your API endpoint using Axios
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     axios.get('http://localhost:8080/users')
       .then((response) => {
-        // Update the data source with the fetched data
         setData(response.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, []);
+  };
 
   const columns = [
     {
@@ -36,7 +42,7 @@ const Home = () => {
       key: 'edit',
       render: (text, record) => (
         <Space size="middle">
-          <a href="#">Edit</a>
+          <a href="#" onClick={() => showEditModal(record._id)}>Edit</a>
         </Space>
       ),
     },
@@ -45,47 +51,105 @@ const Home = () => {
       key: 'delete',
       render: (text, record) => (
         <Space size="middle">
-          <a href="#">Delete</a>
+          <a href="#" onClick={() => showDeleteModal(record._id)}>Delete</a>
         </Space>
       ),
     },
   ];
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const showAddModal = () => {
+    setIsAddModalVisible(true);
   };
 
-  const handleOk = () => {
-    // Make a POST request to add the user to the API
+  const showEditModal = (userId) => {
+    const userToEdit = data.find((user) => user._id === userId);
+    if (userToEdit) {
+      setFirstName(userToEdit.firstName);
+      setLastName(userToEdit.lastName);
+      setEditingUserId(userId);
+      setIsEditModalVisible(true);
+    }
+  };
+
+  const showDeleteModal = (userId) => {
+    setDeletingUserId(userId);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleAddOk = () => {
     axios.post('http://localhost:8080/add-user', {
       firstName: firstName,
       lastName: lastName,
     })
     .then((response) => {
-      // Update the data source with the new user data
       setData([...data, response.data]);
-      setIsModalVisible(false); // Close the modal
+      setIsAddModalVisible(false);
+      setFirstName('');
+      setLastName('');
     })
     .catch((error) => {
       console.error('Error adding user:', error);
     });
   };
 
+  const handleEditOk = () => {
+    axios.put(`http://localhost:8080/update-user/${editingUserId}`, {
+      firstName: firstName,
+      lastName: lastName,
+    })
+    .then((response) => {
+      const updatedData = data.map((user) => {
+        if (user._id === editingUserId) {
+          return response.data.user;
+        } else {
+          return user;
+        }
+      });
+      setData(updatedData);
+      setIsEditModalVisible(false);
+      setFirstName('');
+      setLastName('');
+      setEditingUserId(null);
+    })
+    .catch((error) => {
+      console.error('Error editing user:', error);
+    });
+  };
+
+  const handleDeleteOk = () => {
+    axios.delete(`http://localhost:8080/delete-user/${deletingUserId}`)
+    .then(() => {
+      const updatedData = data.filter((user) => user._id !== deletingUserId);
+      setData(updatedData);
+      setIsDeleteModalVisible(false);
+      setDeletingUserId(null);
+    })
+    .catch((error) => {
+      console.error('Error deleting user:', error);
+    });
+  };
+
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setIsAddModalVisible(false);
+    setIsEditModalVisible(false);
+    setIsDeleteModalVisible(false);
+    setFirstName('');
+    setLastName('');
+    setEditingUserId(null);
+    setDeletingUserId(null);
   };
 
   return (
     <div>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={showModal}>
+      <Button type="primary" style={{ marginBottom: 16 }} onClick={showAddModal}>
         Add User
       </Button>
       <Table dataSource={data} columns={columns} />
 
       <Modal
         title="Add User"
-        visible={isModalVisible}
-        onOk={handleOk}
+        visible={isAddModalVisible}
+        onOk={handleAddOk}
         onCancel={handleCancel}
       >
         <Input
@@ -98,6 +162,33 @@ const Home = () => {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
         />
+      </Modal>
+
+      <Modal
+        title="Edit User"
+        visible={isEditModalVisible}
+        onOk={handleEditOk}
+        onCancel={handleCancel}
+      >
+        <Input
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <Input
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </Modal>
+
+      <Modal
+        title="Delete User"
+        visible={isDeleteModalVisible}
+        onOk={handleDeleteOk}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to delete this user?</p>
       </Modal>
     </div>
   );
