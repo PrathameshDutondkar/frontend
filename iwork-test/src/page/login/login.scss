@@ -1,0 +1,107 @@
+html {
+    font-size: 16px;
+  }
+  
+  .signin-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("../../assets/background.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    .background-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+  
+    .form-container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 0.625rem;
+      padding: 1.25rem;
+      box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.2);
+      width: 35rem;
+    }
+  
+    .form-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+    }
+  
+    .form-item {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    :where(.css-dev-only-do-not-override-pr0fja).ant-form-item
+      .ant-form-item-label
+      > label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      height: 2rem;
+      color: rgba(0, 0, 0, 0.88);
+      font-size: 1.1rem;
+    }
+    .input {
+      font-size: 1rem;
+      padding: 6px 11px;
+    }
+  
+    .form-button {
+      margin-top: 1rem;
+      text-align: center;
+      padding: 1rem 1rem 0 1rem;
+    }
+    .register{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+          .register-name{
+            font-size: 1.3rem;
+            color:#000;
+          }
+          .signup{
+            color: blue;
+            cursor: pointer;
+            padding-bottom: 5px;
+            text-decoration: underline;
+          }
+
+    }
+  
+    .form {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 1.25rem;
+      border-radius: 0.625rem;
+      box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.2);
+      width: 18.75rem;
+      border: 0.0625rem solid rgba(0, 0, 0, 0.1);
+    }
+  
+    .form-input {
+      width: 100%;
+      padding: 0.625rem;
+      border: 0.0625rem solid #ccc;
+      border-radius: 0.3125rem;
+      margin-bottom: 0.625rem;
+    }
+    .custom-button {
+      height: 2.7rem;
+      width: 8rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+  

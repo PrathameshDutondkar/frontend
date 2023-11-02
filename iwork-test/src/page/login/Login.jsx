@@ -1,77 +1,86 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, message, Row, Col } from 'antd';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Form, Input, Button } from "antd";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios"; // Import Axios for making API requests
+import "./login.scss";
 
 const Login = () => {
-    const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onFinish = async (values) => {
-    setLoading(true);
+  const handleAuthentication = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/login', values);
+      setLoading(true);
+
+      // Make an API request to authenticate the user
+      const response = await axios.post("http://localhost:8080/login", {
+        email,
+        password,
+      });
 
       if (response.status === 200) {
-        message.success('Login successful');
-        navigate('/home');
-        toast.success('Login successful');
-       
+        toast.success("Sign-in successful");
+        navigate("/home");
+      } else {
+        toast.error("Invalid email or password");
       }
     } catch (error) {
-      message.error('Login failed. Please check your credentials.');
-      toast.error('Login failed. Please check your credentials');
+      toast.error("An error occurred during sign-in");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
-      <Col xs={24} sm={16} md={12} lg={8} xl={6}>
-        <Form
-          form={form}
-          name="login-form"
-          onFinish={onFinish}
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-        >
+    <div className="signin-container">
+      <div className="background-image" />
+
+      <div className="form-container">
+        <h2 className="form-title">Sign In</h2>
+        <Form name="basic" initialValues={{ remember: true }} onFinish={handleAuthentication}>
           <Form.Item
-            label="Email"
+            className="form-item"
+            label="username"
             name="email"
             rules={[
-              {
-                required: true,
-                message: 'Please input your email!',
-              },
+              { required: true, message: "Please input your email address!" },
+              { type: "email", message: "Please enter a valid email address!" },
             ]}
           >
-            <Input />
+            <Input
+              placeholder="Enter your email address"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Item>
 
           <Form.Item
+            className="form-item"
             label="Password"
             name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your password!',
-              },
-            ]}
+            rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password />
+            <Input.Password
+              placeholder="Enter your password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              Login
+          <div className="form-button">
+            <Button htmlType="submit" className="custom-button" loading={loading}>
+              {loading ? "Signing In" : "Sign In"}
             </Button>
-          </Form.Item>
+          </div>
         </Form>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 };
 
