@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Space, Button, Modal, Input } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import 'react-toastify/dist/ReactToastify.css'
+
 import axios from 'axios';
+import "./home.scss";
+import { toast } from 'react-toastify';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -42,7 +47,7 @@ const Home = () => {
       key: 'edit',
       render: (text, record) => (
         <Space size="middle">
-          <a href="#" onClick={() => showEditModal(record._id)}>Edit</a>
+          <a href="#" onClick={() => showEditModal(record._id)}><EditOutlined style={{  fontSize: '20px' }} /></a>
         </Space>
       ),
     },
@@ -51,11 +56,12 @@ const Home = () => {
       key: 'delete',
       render: (text, record) => (
         <Space size="middle">
-          <a href="#" onClick={() => showDeleteModal(record._id)}>Delete</a>
+          <a href="#" onClick={() => showDeleteModal(record._id)}><DeleteOutlined style={{ color: 'red', fontSize: '20px' }} /></a>
         </Space>
       ),
     },
   ];
+
 
   const showAddModal = () => {
     setIsAddModalVisible(true);
@@ -86,9 +92,26 @@ const Home = () => {
       setIsAddModalVisible(false);
       setFirstName('');
       setLastName('');
+
+      toast.success('User added successfully!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     })
     .catch((error) => {
       console.error('Error adding user:', error);
+      toast.error('something went wrong,please try after sometimes!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
   };
 
@@ -110,9 +133,25 @@ const Home = () => {
       setFirstName('');
       setLastName('');
       setEditingUserId(null);
+      toast.success('User edited successfully!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     })
     .catch((error) => {
       console.error('Error editing user:', error);
+      toast.error('something went wrong,please try after sometimes!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
   };
 
@@ -123,9 +162,26 @@ const Home = () => {
       setData(updatedData);
       setIsDeleteModalVisible(false);
       setDeletingUserId(null);
+      toast.success('User deleted successfully!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+     
     })
     .catch((error) => {
       console.error('Error deleting user:', error);
+      toast.error('something went wrong,please try after sometimes!', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
   };
 
@@ -140,22 +196,24 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={showAddModal}>
+    <div className='home-container'>
+      <Button type="primary"  className="add-user-button" onClick={showAddModal}>
         Add User
       </Button>
-      <Table dataSource={data} columns={columns} />
+      <Table className='table-info' dataSource={data} columns={columns}   pagination={false}  />
 
       <Modal
         title="Add User"
         visible={isAddModalVisible}
         onOk={handleAddOk}
         onCancel={handleCancel}
+      
       >
         <Input
           placeholder="First Name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          style={{ marginBottom: '7px' }}
         />
         <Input
           placeholder="Last Name"
@@ -169,11 +227,13 @@ const Home = () => {
         visible={isEditModalVisible}
         onOk={handleEditOk}
         onCancel={handleCancel}
+       
       >
         <Input
           placeholder="First Name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          style={{ marginBottom: '7px' }}
         />
         <Input
           placeholder="Last Name"

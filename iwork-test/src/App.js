@@ -7,7 +7,7 @@ import Home from "./page/home/Home";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "./errorboundary/errorboundary";
-// import PrivateComponent from "./components/PrivateComponent";
+
 import Login from "./page/login/Login";
 
 function App() {
@@ -23,9 +23,7 @@ function App() {
           <Routes>
             
             <Route path="/" element={<Login></Login>} />
-            {/* <Route element={<PrivateComponent />}> */}
             <Route path="/home" element={<Home></Home>} />
-            {/* </Route> */}
           </Routes>
         </ErrorBoundary>
      

@@ -103,5 +103,13 @@ html {
       font-size: 1.1rem;
       font-weight: 500;
     }
+    
   }
+  @media (max-width: 540px) {
+    .signin-container {
+        .form-container{
+            width: 18rem;
+        }
+    }
+}
   

@@ -3,7 +3,7 @@ import { Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios"; // Import Axios for making API requests
+import axios from "axios"; 
 import "./login.scss";
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
     try {
       setLoading(true);
 
-      // Make an API request to authenticate the user
+      
       const response = await axios.post("http://localhost:8080/login", {
         email,
         password,
