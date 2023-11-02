@@ -17,7 +17,7 @@ const Login = () => {
       setLoading(true);
 
       
-      const response = await axios.post("http://localhost:8080/login", {
+      const response = await axios.post("https://backend-6qco.onrender.com/login", {
         email,
         password,
       });
@@ -29,7 +29,7 @@ const Login = () => {
         toast.error("Invalid email or password");
       }
     } catch (error) {
-      toast.error("An error occurred during sign-in");
+      toast.error("Something went wrong try after some time");
     } finally {
       setLoading(false);
     }

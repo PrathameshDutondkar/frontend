@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Space, Button, Modal, Input } from 'antd';
+import { Table, Space, Button, Modal, Input, Empty, Spin } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -22,12 +24,14 @@ const Home = () => {
   }, []);
 
   const fetchData = () => {
-    axios.get('http://localhost:8080/users')
+    axios.get('https://backend-6qco.onrender.com/users')
       .then((response) => {
-        setData(response.data);
+        setData(response?.data);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        setError(error);
+        setLoading(false);
       });
   };
 
@@ -62,7 +66,6 @@ const Home = () => {
     },
   ];
 
-
   const showAddModal = () => {
     setIsAddModalVisible(true);
   };
@@ -83,7 +86,7 @@ const Home = () => {
   };
 
   const handleAddOk = () => {
-    axios.post('http://localhost:8080/add-user', {
+    axios.post('https://backend-6qco.onrender.com/add-user', {
       firstName: firstName,
       lastName: lastName,
     })
@@ -104,7 +107,7 @@ const Home = () => {
     })
     .catch((error) => {
       console.error('Error adding user:', error);
-      toast.error('something went wrong,please try after sometimes!', {
+      toast.error('Something went wrong, please try again later!', {
         position: 'top-center',
         autoClose: 2000,
         closeOnClick: true,
@@ -116,7 +119,7 @@ const Home = () => {
   };
 
   const handleEditOk = () => {
-    axios.put(`http://localhost:8080/update-user/${editingUserId}`, {
+    axios.put(`https://backend-6qco.onrender.com/update-user/${editingUserId}`, {
       firstName: firstName,
       lastName: lastName,
     })
@@ -144,7 +147,7 @@ const Home = () => {
     })
     .catch((error) => {
       console.error('Error editing user:', error);
-      toast.error('something went wrong,please try after sometimes!', {
+      toast.error('Something went wrong, please try again later!', {
         position: 'top-center',
         autoClose: 3000,
         closeOnClick: true,
@@ -156,7 +159,7 @@ const Home = () => {
   };
 
   const handleDeleteOk = () => {
-    axios.delete(`http://localhost:8080/delete-user/${deletingUserId}`)
+    axios.delete(`https://backend-6qco.onrender.com/delete-user/${deletingUserId}`)
     .then(() => {
       const updatedData = data.filter((user) => user._id !== deletingUserId);
       setData(updatedData);
@@ -170,11 +173,10 @@ const Home = () => {
         draggable: true,
         progress: undefined,
       });
-     
     })
     .catch((error) => {
       console.error('Error deleting user:', error);
-      toast.error('something went wrong,please try after sometimes!', {
+      toast.error('Something went wrong, please try again later!', {
         position: 'top-center',
         autoClose: 2000,
         closeOnClick: true,
@@ -195,19 +197,38 @@ const Home = () => {
     setDeletingUserId(null);
   };
 
+  if (loading) {
+    return (
+      <div className='home-container'>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='home-container'>
+        <p>Error: {error.message}</p>
+      </div>
+    );
+  }
+
   return (
     <div className='home-container'>
-      <Button type="primary"  className="add-user-button" onClick={showAddModal}>
+      <Button type="primary" className="add-user-button" onClick={showAddModal}>
         Add User
       </Button>
-      <Table className='table-info' dataSource={data} columns={columns}   pagination={false}  />
+      {data.length === 0 ? (
+        <Empty />
+      ) : (
+        <Table className='table-info' dataSource={data} columns={columns} pagination={false} />
+      )}
 
       <Modal
         title="Add User"
         visible={isAddModalVisible}
         onOk={handleAddOk}
         onCancel={handleCancel}
-      
       >
         <Input
           placeholder="First Name"
@@ -227,7 +248,6 @@ const Home = () => {
         visible={isEditModalVisible}
         onOk={handleEditOk}
         onCancel={handleCancel}
-       
       >
         <Input
           placeholder="First Name"
