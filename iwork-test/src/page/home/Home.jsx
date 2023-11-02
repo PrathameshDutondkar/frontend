@@ -95,7 +95,7 @@ const Home = () => {
 
       toast.success('User added successfully!', {
         position: 'top-center',
-        autoClose: 3000,
+        autoClose: 2000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -106,7 +106,7 @@ const Home = () => {
       console.error('Error adding user:', error);
       toast.error('something went wrong,please try after sometimes!', {
         position: 'top-center',
-        autoClose: 3000,
+        autoClose: 2000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -135,7 +135,7 @@ const Home = () => {
       setEditingUserId(null);
       toast.success('User edited successfully!', {
         position: 'top-center',
-        autoClose: 3000,
+        autoClose: 2000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -164,7 +164,7 @@ const Home = () => {
       setDeletingUserId(null);
       toast.success('User deleted successfully!', {
         position: 'top-center',
-        autoClose: 3000,
+        autoClose: 2000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -176,7 +176,7 @@ const Home = () => {
       console.error('Error deleting user:', error);
       toast.error('something went wrong,please try after sometimes!', {
         position: 'top-center',
-        autoClose: 3000,
+        autoClose: 2000,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
